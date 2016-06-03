@@ -26,6 +26,7 @@
     "electron-prebuilt": "^1.0.1"
   },
   "dependencies": {
+    "hummus": "^1.0.53",
     "pdf-text-extract": "^1.4.1"
   }
 }

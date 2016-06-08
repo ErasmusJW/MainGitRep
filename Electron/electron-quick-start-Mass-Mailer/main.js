@@ -4,7 +4,8 @@ const electron = require('electron')
 const app = electron.app
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
-
+const shell = require('electron').shell;
+const os = require('os');
 
 const ipc = require('electron').ipcMain
 const dialog = require('electron').dialog
@@ -38,13 +39,21 @@ ipc.on('open-folder-dialog', function (event,arg) {
 
 
 
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
+ipc.on('open-folder', function (event,arg) {
+  shell.showItemInFolder(arg[0]);
+  //mainWindow.blur();
+
+
+})
+
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 1280, height: 600})
+  mainWindow = new BrowserWindow({width: 1280*2, height: 600*2})
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`)

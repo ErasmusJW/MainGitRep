@@ -9,7 +9,15 @@
 
 
 
+const shell = require('electron').shell;
 
+const os = require('os')
+
+// const fileMangerBtn = document.getElementById('open-file-manager')
+
+// fileMangerBtn.addEventListener('click', function (event) {
+//   shell.showItemInFolder(os.homedir())
+// })
 
 
 
@@ -109,6 +117,10 @@ OutFolderBtn.addEventListener('click', function (event) {
 
 })
 
+
+
+
+
 function ExtractPages(callback)
 {
 	for(var i = 0 ; i < pdfFile.inputFiles.length ; i++)
@@ -128,12 +140,16 @@ function ExtractPages(callback)
 		    {
 
 		      var n = pages[index].search("Account Number:");
-		      var substring = pages[index].substring(n+16,n+5+16);
+		      var Accountsubstring = pages[index].substring(n+16,n+5+16);
 		      //console.log("\n")
 		        // console.log(index)
 		      //console.log(substring)
-		      substring = substring.trim()
-		      var index2 = index+1
+		      Accountsubstring = Accountsubstring.trim();
+		      var index2 = index+1;
+
+		      var NamePos = pages[index].search("Student:");
+		      var NameSubstring = pages[index].substring(NamePos+9,NamePos+40);
+		      NameSubstring = NameSubstring.trim();
 
 
 	    	  // var exeName = "pdftk \"" + pdfFile.InPath + "\" cat "+ index2 + " output \"" + pdfFile.OutPath +"\\"+ substring + ".pdf \"";
@@ -141,9 +157,9 @@ function ExtractPages(callback)
 
 		      var OneAccount = {
 		      	PageNumber : index2,
-		      	AccountNumber : substring,
-		      	pdftkString : "pdftk \"" + pdfFile.inputFiles[0] + "\" cat "+ index2 + " output \"" + pdfFile.OutputFolder +"\\"+ substring + ".pdf \""
-
+		      	AccountNumber : Accountsubstring,
+		      	pdftkString : "pdftk \"" + pdfFile.inputFiles[0] + "\" cat "+ index2 + " output \"" + pdfFile.OutputFolder +"\\"+ Accountsubstring + ".pdf \"",
+		      	name : NameSubstring,
 		      }
 		 	
 
@@ -231,14 +247,53 @@ var AddRemoveButton = function(element,AdditionalclickEvent)
         the_node.parentNode.removeChild(the_node);
 
 
-    	AdditionalclickEvent(event);
+    	if(AdditionalclickEvent)
+    		AdditionalclickEvent(event);
 
     })
 
 
-    AdditionalclickEvent
     element.appendChild(x);	
 }
+
+var AddOpenFolderButton = function(element)
+{
+    let ElementId = element.getAttribute("id");
+
+    let x = document.createElement("button");
+    let btnText = document.createTextNode("Open Folder");
+    x.appendChild(btnText);
+    x.className = "btn btn-link";
+    x.type="button";
+    x.addEventListener('click', function(event){
+		ipc.send('open-folder',[ElementId]);
+		//shell.showItemInFolder(ElementId);
+    })
+
+
+
+    element.appendChild(x);	
+}
+
+var AddOpenFileButton = function(element)
+{
+    let ElementId = element.getAttribute("id");
+
+    let x = document.createElement("button");
+    let btnText = document.createTextNode("Open File");
+    x.appendChild(btnText);
+    x.className = "btn btn-link";
+    x.type="button";
+    x.addEventListener('click', function(event){
+
+		shell.openItem(ElementId);
+    })
+
+
+
+    element.appendChild(x);	
+}
+
 
 ipc.on('selected-file', function (event, path) {
 
@@ -264,8 +319,12 @@ ipc.on('selected-file', function (event, path) {
 	        {
 	        	 pdfFile.inputFiles.splice(index,1);
 	        }
+			if(pdfFile.inputFiles.length <= 0)
+	      		ProcessBtn.disabled = true;
+		})
 
-	})
+		AddOpenFolderButton(para);
+		AddOpenFileButton(para);
 
 
 
@@ -273,7 +332,7 @@ ipc.on('selected-file', function (event, path) {
 		theDiv.appendChild(para);
 
 		pdfFile.inputFiles.push(path[0]);
-		console.log(para);
+	
 	}
 
 
@@ -292,14 +351,63 @@ ipc.on('selected-file', function (event, path) {
 
   if(pdfFile.OutputFolder )
   	ProcessBtn.disabled = false;
+  else
+  	ProcessBtn.disabled = true;
 
 })  
 
 
 
 ipc.on('selected-folder', function (event, path) {
-  document.getElementById('OutPut-folder').innerHTML = `${path}`
-  pdfFile.OutputFolder = path[0];
+
+  	pdfFile.OutputFolder = path[0];
+
+	var theDiv = document.getElementById('OutputList');
+
+	var para = document.createElement("P");
+	para.setAttribute("id", path[0]);
+	var t = document.createTextNode(path);
+	para.appendChild(t);
+
+	AddRemoveButton(para,function(event){
+		pdfFile.OutputFolder = null;
+		ProcessBtn.disabled = true;
+
+
+	})
+
+	AddOpenFolderButton(para);
+
+	theDiv.appendChild(para);
+
   if(pdfFile.inputFiles.length > 0)
   	ProcessBtn.disabled = false;
+  else
+  	ProcessBtn.disabled = true;
+
 })  
+
+$('#ShowAccounts').on('click', function (e) {
+	$('#AccountsModal').modal('show');
+
+
+
+})
+
+
+$('#AccountsModal').on('shown.bs.modal', function (e) {
+
+	var theDiv = document.getElementById('AccOut');
+	for (var i = Accounts.length - 1; i >= 0; i--) {
+
+		let para = document.createElement("P");
+		let t = document.createTextNode(Accounts[i].name);
+		para.appendChild(t);
+		theDiv.appendChild(para);
+
+	}
+
+	$('#AccountsModal').modal('handleUpdate');
+
+})
+

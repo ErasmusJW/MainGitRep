@@ -1,8 +1,14 @@
 {
-  "name": "electron-quick-start",
+  "name": "pdfSplit",
   "version": "1.0.0",
   "description": "A minimal Electron application",
   "main": "main.js",
+  "bin" : { 
+    "pdftk.exe" : "./1/pdftk.exe",
+    "pdftotext.exe" : "./1/pdftotext.exe"
+
+  } ,
+  "files" : [ "PDFtk Server","xpdfbin-win-3.04" ],
   "scripts": {
     "start": "electron main.js"
   },
@@ -26,7 +32,6 @@
     "electron-prebuilt": "^1.0.1"
   },
   "dependencies": {
-    "hummus": "^1.0.53",
     "pdf-text-extract": "^1.4.1"
   }
 }

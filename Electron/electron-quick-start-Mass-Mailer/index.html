@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>Master Maths accounts Tool</title>
     <!-- bootstrap stuff -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -14,7 +14,7 @@
     <script type="text/javascript" src="js/jquery-2.2.4.min.js"></script>
     
   </head>
-  <body>
+<body>
 
 
     
@@ -23,7 +23,7 @@
     <div class="container">
     
       <div class ="row program-heading">
-        <div class="col-xs-8 col-xs-offset-2"><h2 class="text-center">Master Maths Northcliff PDF splitter</h4>
+        <div class="col-xs-8 col-xs-offset-2"><h2 class="text-center">Master Maths Northcliff PDF splitter</h2>
         </div>
       </div>
     </div>
@@ -54,15 +54,17 @@
 
           <button  type="button" id="OutputFolder" class="btn btn-primary col-sm-1" >Browse</button>
         </div>
-        <div class="form-group">
-                <p id="OutPut-folder" class="col-sm-6 col-xs-offset-3"> </p>
-        </div>  
+        <div class="form-group" >
+                <div id="OutputList" class="col-sm-6 col-xs-offset-3"> 
+                </div>
+        </div> 
        
       </form>
 
 
 
-
+<!--       processing modal ########################################
+######################################################################-->
       <div class="modal fade" tabindex="0" role="dialog" aria-labelledby="myLargeModalLabel" id="ProcessingModal" data-backdrop="static">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
@@ -91,11 +93,32 @@
           </div>
         </div>
       </div>
+<!--       processing modal close -->
+
+<!--           Accounts display modal -->
+      <div class="modal fade" tabindex="0" role="dialog" aria-labelledby="myLargeModalLabel" id="AccountsModal" >
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-body">
+  
+                <p id="AccOut"></p>
+  
+
+       
+              <button type="button" class="btn btn-primary " id="CloseModalAcconts" data-dismiss="modal">  close</span></button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
 
       <div class = "row">
         <div class="col-xs-offset-5">
           <button  class="btn btn-primary" data-toggle="modal" data-target="#ProcessingModal" id="processFile"> Process </button>
+          <button  class="btn btn-primary"  id="ShowAccounts"> Show Accounts </button>
         </div>
+
       </div>
 <!-- 
       <button  class="btn btn-primary" data-toggle="modal" data-target="#ProcessingModal" id="processFile2"> Process2 </button> -->
@@ -107,8 +130,8 @@
     
 
 
-     </div>
-  </body>
+  </div>
+</body>
   <script src="bootstrap/js/bootstrap.min.js"></script>
 
   <script>
